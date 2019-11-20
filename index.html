@@ -1,0 +1,135 @@
+<html>
+
+<head>
+  <title>Wheel</title>
+  <style>
+  .rotated {
+      transform: rotate(90deg);
+      -ms-transform: rotate(90deg);
+      -moz-transform: rotate(90deg);
+      -webkit-transform: rotate(90deg);
+      -o-transform: rotate(90deg);
+    }
+  .img{
+        transition: all 0.5s ease;
+        height: 400px;
+        width: 400px;
+      }
+  </style>
+  <link rel="stylesheet" href="wheelofFortune.css">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+  <script>
+    var guessWord = ['j','a','y','a','d','e','e','p'];
+    var blanks = ['_' , '_' , '_', '_', '_', '_', '_','_'];
+    var breaker = "<br>";
+    var totalMoney = 0;
+    var spinAllowed = false;
+    var counter = 0;
+    function guess()
+    {
+      document.getElementById("output").innerHTML = "Enter a letter "+breaker+ blanks;
+      var letter = document.getElementById('letter').value;
+      for(var i = guessWord.length; i>=0;i--)
+      {
+        if(letter == guessWord[i] && blanks[i] != letter)
+        {
+          counter++;
+          if(counter == 8)
+          {
+            finish();
+            return;
+          }
+
+          blanks[i] = guessWord[i];
+          document.getElementById("output").innerHTML = blanks+breaker+'You have '+totalMoney+" dollars." + breaker+ " Spin the Wheel!";
+          spinAllowed = true;
+
+
+        }
+      }
+
+    }
+    function finish()
+    {
+
+      document.getElementById("output").innerHTML = "You won a car and " + totalMoney+" dollars "+breaker+ "<img src='car.jpg'>";
+
+  }
+
+    function enter()
+    {
+      guess();
+    }
+  // 0 = Lose a turn -1 = bannkrupt
+  var values = [0, 800, 350, 450,700,300,
+                 600,5000,600,500,300,500,
+                 800,550,400,300,900,500,
+                 300,900,-1,600,400,300];
+
+  $(document).ready(function() {
+    var degrees = 0;
+    $('.img').click(function rotateMe(e) {
+      if(spinAllowed == true){
+      genNumber();
+      degrees += 90;
+
+      $('.img').css({
+          'transform': 'rotate(' + degrees + 'deg)',
+          '-ms-transform': 'rotate(' + degrees + 'deg)',
+          '-moz-transform': 'rotate(' + degrees + 'deg)',
+          '-webkit-transform': 'rotate(' + degrees + 'deg)',
+          '-o-transform': 'rotate(' + degrees + 'deg)'
+        });
+        document.getElementById("output").innerHTML = blanks+breaker+'You have '+totalMoney+" dollars";
+        spinAllowed=false;
+        //guess();
+      }
+      })
+    });
+
+  function genNumber()
+  {
+    var money = values[parseInt(values.length * Math.random())];
+    //document.getElementById('winnings').innerHTML = money;
+    if(money == 0)
+    {
+        document.getElementById("output").innerHTML = blanks+breaker+'You have lost a turn';
+      spinAllowed ==false;
+    } else if(money == -1)
+    {
+      document.getElementById("output").innerHTML = blanks+breaker+'You have lost all your money';
+
+      totalMoney = 0;
+    }else {
+
+
+      totalMoney=totalMoney+money;
+    }
+
+  }
+
+  </script>
+</head>
+
+<body id="body" onload = "guess()">
+  <h id="title">Wheel of Fortune Game</h>
+  <br>
+  <br>
+  <input id="letter" type="text" value="Enter Guess Here">
+  <br>
+  <input id="button" type="button" value="Enter" onclick="enter()">
+  <span id = "output"></span>
+  <div>
+     <br>
+     <span id = "winnings"></span>
+  </div>
+
+<div>
+    <img class = "img" src = "wheel.png">
+</div>
+
+</body>
+
+</html>
